@@ -12,9 +12,14 @@ app.get('/', (req, res, next) => {
 });
 
 app.get('/whoami', (req, res, next) => {
-  let ip = req.ip.split(':');
+
+  var ip = (req.headers['x-forwarded-for'] ||
+     req.connection.remoteAddress ||
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress).split(",")[0];
+
   let whoareyou = {
-    ipAddress: ip[ip.length - 1],
+    ipAddress: ip,
     language: req.headers['accept-language'].split(',')[0],
     operatingSystem: req.headers['user-agent'].split('(')[1].split(')')[0]
   }
