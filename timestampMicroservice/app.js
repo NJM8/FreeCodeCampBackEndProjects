@@ -19,7 +19,7 @@ app.get('/:myDate', (req, res, next) => {
   }
 
   if (myDate.match(/[a-z]/gi)) {
-    dates.naturalDate = new Date(myDate.replace('%20', ''));
+    dates.naturalDate = new Date(myDate);
     dates.unixDate = Math.floor(new Date(dates.naturalDate).getTime() / 1000);
   } else {
     dates.naturalDate = new Date(myDate * 1000);
