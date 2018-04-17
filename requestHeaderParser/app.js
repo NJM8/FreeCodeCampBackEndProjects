@@ -6,20 +6,16 @@ const app = express();
 
 app.use(morgan('tiny'));
 app.use(express.static(__dirname + "/views"));
+app.enable('trust proxy');
 
 app.get('/', (req, res, next) => {
   return res.render('index');
 });
 
 app.get('/whoami', (req, res, next) => {
-
-  var ip = (req.headers['x-forwarded-for'] ||
-     req.connection.remoteAddress ||
-     req.socket.remoteAddress ||
-     req.connection.socket.remoteAddress).split(",")[0];
-
+  let ip = req.ip.split(':');
   let whoareyou = {
-    ipAddress: ip,
+    ipAddress: ip[ip.length - 1],
     language: req.headers['accept-language'].split(',')[0],
     operatingSystem: req.headers['user-agent'].split('(')[1].split(')')[0]
   }
