@@ -48,7 +48,7 @@ app.use((err, req, res, next) => {
     console.log(err);
   }
   res.status(err.status || 500);
-  return res.render('error');
+  return res.sendfile(__dirname + '/views/error.html');
 });
 
 app.listen(PORT, () => {
