@@ -5,6 +5,10 @@ const urlRouter = require('./routes/urlRouter')
 const PORT = process.env.PORT || 8000;
 const app = express();
 
+if (app.get('env') === 'development') {
+  require('dotenv').load();
+}
+
 app.use(morgan('tiny'));
 app.use(express.static(__dirname + "/views"));
 
