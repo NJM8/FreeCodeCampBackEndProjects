@@ -19,8 +19,6 @@ router
       urlShortened: 'none'
     }
 
-    console.log(validUrl);
-    
     if (validUrl) {
       const axiosUrl = `https://api.wordnik.com/v4/words.json/randomWords?limit=2&api_key=${process.env.WORDNIK_API_KEY}`;
       axios
