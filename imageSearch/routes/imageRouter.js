@@ -9,13 +9,13 @@ router
   });
   
 router
-  .route('/history')
+  .route('/api/latest')
   .get((req, res, next) => {
     console.log('history');
   });
 
 router
-  .route('/:query')
+  .route('/api/imagesearch/:query')
   .get((req, res, next) => {
     if (req.query.offset) {
       console.log(`offset: ${req.query.offset}`);
