@@ -37,7 +37,7 @@ app.use((err, req, res, next) => {
     console.log(err);
   }
   res.status(err.status || 500);
-  return res.sendfile(__dirname + '/views/error.html');
+  return res.sendFile(__dirname + '/views/error.html');
 });
 
 app.listen(PORT, () => {
