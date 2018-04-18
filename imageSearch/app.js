@@ -6,9 +6,11 @@ const imageRouter = require('./routes/imageRouter')
 const PORT = process.env.PORT || 8000;
 const app = express();
 
-// if (app.get('env') === 'development') {
-//   require('dotenv').load();
-// }
+if (app.get('env') === 'development') {
+  require('dotenv').load();
+  console.log(process.env.API_KEY);
+  console.log(process.env.CSE_ID);
+}
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('tiny'));

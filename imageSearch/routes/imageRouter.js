@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const googleImages = require('google-images');
+const searchClient = new googleImages(`${process.env.CSE_ID}`, `${process.env.API_KEY}`);
+
+console.log(process.env.API_KEY);
+console.log(process.env.CSE_ID);
 
 router
   .route('/')
@@ -11,7 +16,7 @@ router
 router
   .route('/api/latest')
   .get((req, res, next) => {
-    console.log('history');
+    console.log('latest');
   });
 
 router
@@ -20,7 +25,11 @@ router
     if (req.query.offset) {
       console.log(`offset: ${req.query.offset}`);
     }
-    console.log(`query: ${req.params.query}`);
+    searchClient.search(`${req.params.query}`).then(images => {
+      return res.json(images);
+    }).catch(err => {
+      return next(err);
+    })
   });
 
   module.exports = router;
