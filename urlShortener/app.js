@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const urlRouter = require('./routes/urlRouter')
 
 const PORT = process.env.PORT || 8000;
@@ -9,6 +10,7 @@ if (app.get('env') === 'development') {
   require('dotenv').load();
 }
 
+app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.static(__dirname + "/views"));
 

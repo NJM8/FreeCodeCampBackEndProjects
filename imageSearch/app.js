@@ -3,10 +3,12 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const imageRouter = require('./routes/imageRouter');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const PORT = process.env.PORT || 8000;
 const app = express();
 dotenv.load();
 
+app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('tiny'));
 app.use(express.static(__dirname + "/views"));
