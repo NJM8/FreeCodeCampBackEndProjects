@@ -12,7 +12,23 @@ router
 router
 .route('/api/latest')
 .get((req, res, next) => {
-  console.log('latest');
+  return db.Image.find().sort({'updatedAt': -1}).limit(10)
+    .select({ searchQuery: 1, createdAt: 1, _id:0 }).lean()
+    .exec().then(data => {
+      // needed to map over data and make new object from query result, query result is a mongoose doc obj so it cannot be modified, adding .lean() returns a simple JS obj that can be modified.
+      // data = data.map(item => {
+      //   const date = new Date(item.createdAt);
+      //   return ({searchQuery: item.searchQuery, searchDate: `${date.toDateString()} ${date.toTimeString()}`});
+      // });
+      data.forEach(item => {
+        const date = new Date(item.createdAt);
+        item.searchDate = `${date.toDateString()} ${date.toTimeString()}`;
+        delete item.createdAt;
+      })
+      return res.json(data);
+    }).catch(err => {
+      return next(err);
+    })
 });
 
 router
@@ -21,7 +37,7 @@ router
   const searchClient = new googleImages(`${process.env.CSE_ID}`, `${process.env.CSE_API_KEY}`);
   searchClient.search(`${req.params.query}`, { page : req.query.offset || 1 }).then(imagesResults => {
     let results = {
-      query: req.params.query,
+      searchQuery: req.params.query,
       images: []
     }
     imagesResults.forEach(image => {
