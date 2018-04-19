@@ -9,6 +9,13 @@
 </head>
 <body>
   <h1>File Metadata</h1>
+  <p>Browse to select a file to upload and see it's metadata.</p>
+  <form action="/getMetadata" enctype="multipart/form-data" method="POST">
+    <input type="file" name="fileUpload">
+    <input type="submit">
+  </form>
+  <br>
+  <br>
   <a href="https://www.natethedev.com" target="_blank" rel="noopener">Created by Nate Mallison</a>
 </body>
 </html>
