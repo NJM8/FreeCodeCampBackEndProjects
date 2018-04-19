@@ -5,10 +5,8 @@ const imageSchema = new mongoose.Schema({
     type: String
   }, 
   images:[{
-    title: {
-      type: String
-    }, 
-    alt: {
+    _id: false,
+    altTag: {
       type: String
     },
     imageUrl: {

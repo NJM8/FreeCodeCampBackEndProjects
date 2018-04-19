@@ -1,16 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const imageRouter = require('./routes/imageRouter')
-
+const imageRouter = require('./routes/imageRouter');
+const dotenv = require('dotenv');
 const PORT = process.env.PORT || 8000;
 const app = express();
-
-if (app.get('env') === 'development') {
-  require('dotenv').load();
-  console.log(process.env.API_KEY);
-  console.log(process.env.CSE_ID);
-}
+dotenv.load();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('tiny'));
