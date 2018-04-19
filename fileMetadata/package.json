@@ -1,0 +1,11 @@
+{
+  "name": "filemetadata",
+  "version": "1.0.0",
+  "description": "A small app to tell you the size of an uploaded file.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nate Mallison",
+  "license": "ISC"
+}
