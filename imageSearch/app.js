@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const imageRouter = require('./routes/imageRouter');
 const dotenv = require('dotenv');
@@ -9,7 +8,6 @@ const app = express();
 dotenv.load();
 
 app.use(cors())
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('tiny'));
 app.use(express.static(__dirname + "/views"));
 
