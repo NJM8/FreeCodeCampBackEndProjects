@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from './axios-auth';
-import * as Key from './components/auth/key';
+import axios from 'axios';
 import router from './router'
 
 Vue.use(Vuex)
@@ -10,118 +9,93 @@ export default new Vuex.Store({
   state: {
     idToken: null, 
     userId: null,
-    user: null
+    userName: null
   },
   mutations: {
     authUser(state, userData){
-      state.idToken = userData.token;
+      state.idToken = userData.idToken;
       state.userId = userData.userId;
+      state.userName = userData.userName;
     },
-    storeUser(state, user){
-      state.user = user;
+    storeUser(state, userData){
+      state.userName = userData.userName;
+      state.userId = userData.userId;
     },
     clearAuthData(state){
       state.idToken = null;
       state.userId = null;
+      state.userName = null;
     }
   },
   actions: {
-    setLogoutTimer({dispatch}, expirationTime){
-      setTimeout(() => {
-        dispatch('logout');
-      }, expirationTime * 1000)
-    },
     signUp({commit, dispatch}, authData){
-      axios.post(`/signupNewUser?key=${Key.myKey}`, {
+      axios.post('/signup', {
         email: authData.email, 
         password: authData.password, 
-        returnSecureToken: true
+        userName: authData.userName, 
       })
         .then(res => {
           console.log(res);
           commit('authUser', {
-            token: res.data.idToken,
-            userId: res.data.localId
+            idToken: res.data.idToken,
+            userId: res.data.userId,
+            userName: res.data.userName
           });
           const now = new Date();
           const expirationDate = new Date(now.getTime() + res.data.expiresIn * 1000);
-          localStorage.setItem('token', res.data.idToken);
-          localStorage.setItem('userId', res.data.localId);          
-          localStorage.setItem('expirationDate', expirationDate);
-          dispatch('storeUserInDB', authData);
-          dispatch('setLogoutTimer', res.data.expiresIn);          
+          localStorage.setItem('votingAppUserData', JSON.stringify({
+            'idToken': res.data.idToken, 
+            'expirationDate': expirationDate
+          }));
         })
         .catch(error => console.log(error))
-
     }, 
-    login({commit, dispatch}, authData){
-      axios.post(`/verifyPassword?key=${Key.myKey}`, {
+    signin({commit, dispatch}, authData){
+      axios.post('/signin', {
         email: authData.email, 
-        password: authData.password, 
-        returnSecureToken: true
+        userName: authData.userName, 
       })
         .then(res => {
           console.log(res);
           commit('authUser', {
             token: res.data.idToken,
-            userId: res.data.localId
+            userId: res.data.userId,
+            userName: authData.userName             
           });
           const now = new Date();
           const expirationDate = new Date(now.getTime() + res.data.expiresIn * 1000);
-          localStorage.setItem('token', res.data.idToken);
-          localStorage.setItem('userId', res.data.localId);
-          localStorage.setItem('expirationDate', expirationDate);
-          dispatch('setLogoutTimer', res.data.expiresIn);
+          localStorage.setItem('votingAppUserData', JSON.stringify({
+            'idToken': res.data.idToken, 
+            'expirationDate': expirationDate
+          }));
         })
         .catch(error => console.log(error))
     },
-    tryAutoLogin({commit}){
-      const token = localStorage.getItem('token');
-      if (!token) {
+    tryAutoLogin({commit, dispatch}){
+      const savedData = localStorage.getItem('votingAppUserData');
+      if (!savedData) {
         return;
       }
-      const expirationDate = localStorage.getItem('expirationDate');
+      const expirationDate = savedData.expirationDate;
       const now = new Date();
       if (now >= expirationDate) {
         return;
       }
-      const userId = localStorage.getItem('userId');
-      commit('authUser', {
-        token: token,
-        userId: userId
-      })
+      dispatch('fetchUser');
     },
     logout({commit}){
       commit('clearAuthData');
-      localStorage.removeItem('expirationDate');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('token');
-      router.replace('/signin');
-    },
-    storeUserInDB({commit, state}, userData){
-      if (!state.idToken) {
-        return;
-      }
-      globalAxios.post('/users.json?auth=' + state.idToken, userData)
-        .then(res => console.log(res))
-        .catch(error => console.log(error))
+      localStorage.removeItem('votingAppUserData');
+      router.replace('/home');
     },
     fetchUser({commit, state}){
       if (!state.idToken) {
         return;
       }
-      globalAxios.get('/users.json' + '?auth=' + state.idToken)
+      globalAxios.get('/verifyUser', { idToken: state.idToken })
       .then(res => {
         console.log(res);
-        const data = res.data;
-        const users = [];
-        for (const key in data){
-          const user = data[key];
-          user.id = key;
-          users.push(user);
-        }
-        console.log(users);
-        commit('storeUser', users[0])
+        commit('storeUser', res.data)
       })
       .catch(error => console.log(error))
     }
