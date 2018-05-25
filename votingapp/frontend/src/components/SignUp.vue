@@ -9,7 +9,7 @@
           v-model="userName"
           type="text" 
           class="form-control"
-          :class="{error : errors.has('userName')}" 
+          :class="{error : errors.has('userName'), success: checkSuccess('userName')}" 
           id="username" 
           aria-describedby="userName" 
           placeholder="Enter name">
@@ -23,7 +23,7 @@
           v-model="email"
           type="email" 
           class="form-control"
-          :class="{error : errors.has('email')}" 
+          :class="{error : errors.has('email'), success: checkSuccess('email')}" 
           id="email" 
           aria-describedby="email" 
           placeholder="Enter email">
@@ -38,7 +38,7 @@
           v-model="password"
           type="password" 
           class="form-control"
-          :class="{error : errors.has('password')}" 
+          :class="{error : errors.has('password'), success: checkSuccess('password')}" 
           id="password" 
           aria-describedby="password"           
           placeholder="Password">
@@ -65,13 +65,21 @@ export default {
       this.$validator.validateAll().then((valid) => {
         if (valid) {
           this.fixForm = false;
-          // call api from store
+          const formData = {
+            userName: this.userName,
+            email: this.email,
+            password: this.password,
+          }
+          this.$store.dispatch('signUp', formData)
           return;
         } else {
           this.fixForm = true;
           return;
         }
       });
+    },
+    checkSuccess(field){
+      return !this.errors.has(`${field}`) && this[field].length > 0;
     }
   }
 }
@@ -85,5 +93,10 @@ export default {
 .error {
   border: 1px solid firebrick;
   box-shadow: 0 0 0 .125em rgba(255,56,96,.25);
+}
+
+.success {
+  border: 1px solid #42b883;
+  box-shadow: 0 0 0 .125em rgba(68, 238, 90, 0.479);
 }
 </style>
