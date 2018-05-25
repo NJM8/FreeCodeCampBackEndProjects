@@ -9,7 +9,7 @@
           v-model="userName"
           type="text" 
           class="form-control"
-          :class="{error : errors.has('userName')}" 
+          :class="{error : errors.has('userName'), success: checkSuccess('userName')}" 
           id="username" 
           aria-describedby="userName" 
           placeholder="Enter name">
@@ -23,7 +23,7 @@
           v-model="password"
           type="password" 
           class="form-control"
-          :class="{error : errors.has('password')}" 
+          :class="{error : errors.has('password'), success: checkSuccess('email')}" 
           id="password" 
           aria-describedby="password"           
           placeholder="Password">
@@ -56,7 +56,10 @@ export default {
         }
       });
     }
-  }
+  },
+    checkSuccess(field){
+      return !this.errors.has(`${field}`) && this[field].length > 0;
+    }
 }
 </script>
 
@@ -68,5 +71,10 @@ export default {
 .error {
   border: 1px solid firebrick;
   box-shadow: 0 0 0 .125em rgba(255,56,96,.25);
+}
+
+.success {
+  border: 1px solid #42b883;
+  box-shadow: 0 0 0 .125em rgba(68, 238, 90, 0.479);
 }
 </style>
