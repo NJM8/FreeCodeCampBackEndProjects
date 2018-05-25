@@ -86,5 +86,4 @@ export default {
   border: 1px solid firebrick;
   box-shadow: 0 0 0 .125em rgba(255,56,96,.25);
 }
-
 </style>
