@@ -28,7 +28,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    signUp({commit, dispatch}, authData){
+    signUp({commit}, authData){
+      console.log(authData);
       axios.post('/signup', {
         email: authData.email, 
         password: authData.password, 
@@ -47,13 +48,14 @@ export default new Vuex.Store({
             'idToken': res.data.idToken, 
             'expirationDate': expirationDate
           }));
+          router.push('/userPage');
         })
         .catch(error => console.log(error))
     }, 
     signin({commit, dispatch}, authData){
       axios.post('/signin', {
         email: authData.email, 
-        userName: authData.userName, 
+        username: authData.userName, 
       })
         .then(res => {
           console.log(res);
@@ -68,6 +70,7 @@ export default new Vuex.Store({
             'idToken': res.data.idToken, 
             'expirationDate': expirationDate
           }));
+          router.push('/userPage');          
         })
         .catch(error => console.log(error))
     },
@@ -101,8 +104,11 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    user(state){
-      return state.user;
+    userId(state){
+      return state.userId;
+    },
+    userName(state){
+      return state.userName;
     },
     isAuth(state){
       return state.idToken !== null;

@@ -6,6 +6,7 @@ import Home from './components/Home.vue'
 import SignIn from './components/SignUp.vue'
 import SignUp from './components/SignIn.vue'
 import Polls from './components/Polls.vue'
+import UserPage from './components/userPage.vue'
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,7 @@ const routes = [
   { path: '/signup', component: SignIn },
   { path: '/signin', component: SignUp },
   { path: '/polls', component: Polls },
+  { path: '/userPage', component: UserPage },
   { path: '/*', redirect: { name: 'home' } },
 ]
 
