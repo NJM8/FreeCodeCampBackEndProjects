@@ -5,9 +5,11 @@ import router from './router'
 import store from './store'
 
 import axios from 'axios'
-import Vuelidate from 'vuelidate'
+import VeeValidate from 'vee-validate';
 
-Vue.use(Vuelidate);
+Vue.use(VeeValidate, {
+  events: 'blur'
+});
 
 axios.defaults.baseURL = 'https://natethedev-votingappbackend.herokuapp.com/';
 
