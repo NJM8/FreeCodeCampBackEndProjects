@@ -19,15 +19,23 @@ router
       urlShortened: 'none'
     }
 
+    db.Url.findOne({ urlOriginal: req.params[0] }).then(data => {
+      if (data) {
+        return res.json(data)
+      }
+    });
+
     if (validUrl) {
       const axiosUrl = `https://api.wordnik.com/v4/words.json/randomWords?limit=2&api_key=${process.env.WORDNIK_API_KEY}`;
       axios
         .get(axiosUrl)
         .then(response => {
-          let newExtension = response.data[0].word.toLowerCase() +  response.data[1].word[0].toUpperCase() + response.data[1].word.slice(1);
-          newExtension = newExtension.replace(/\s/g, '').replace(/-/g, '');
+          const wordOne = response.data[0].word;
+          const wordTwo = response.data[1].word;
+
           newUrl.urlOriginal = req.params[0];
-          newUrl.urlShortened = `https://natethedevurlshortener.herokuapp.com/${newExtension}`;
+          newUrl.urlShortened = `https://natethedevurlshortener.herokuapp.com/${wordOne[0].toUpperCase()}${wordOne.slice(1)}${wordTwo[0].toUpperCase()}${wordTwo.slice(1)}`;
+
           return db.Url.create(newUrl).then(data => {
             return res.json(data);
           }).catch(err => {
@@ -46,7 +54,6 @@ router
   .get((req, res, next) => {
     const fullShortUrl = `https://natethedevurlshortener.herokuapp.com/${req.params.url}`;
     return db.Url.findOne({ urlShortened : fullShortUrl }).then(data => {
-      console.log(data);
       if (data === null) {
         return next('err');
       }
