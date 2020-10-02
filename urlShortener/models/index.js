@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-mongoose.set('debug', true);
+mongoose.set("debug", true);
 mongoose.Promise = global.Promise;
 
 mongoose
-  .connect(process.env.MONGODB_URI || 'mongodb://localhost/urlShortener')
+  .connect(process.env.DB_URI || "mongodb://localhost/urlShortener")
   .then(() => {
-    return console.log('Connected to Mongo DB');
+    return console.log("Connected to Mongo DB");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(`Error: ${err}`);
   });
 
-  module.exports.Url = require('./urlModel'); 
+module.exports.Url = require("./urlModel");
